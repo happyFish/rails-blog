@@ -1,0 +1,13 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= @tag.title %></h1>
+
+<% @tag.posts.each do |post| %>
+<div>
+  <%=link_to post.title, '/posts/' + post.id.to_s%>
+</div>
+<% end %>
+
+
+<%= link_to 'Edit', edit_tag_path(@tag) %> |
+<%= link_to 'Back', tags_path %>

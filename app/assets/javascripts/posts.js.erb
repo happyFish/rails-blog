@@ -1,0 +1,56 @@
+$('document').ready(function(){
+	//Attachments
+	$('#attachments input').live('change', function(){
+		var clone = $(this).clone().val('');
+		$(this).after(clone);
+	});
+	
+	
+	// Comments
+	$('#comments form').live('submit', function(e){
+		e.preventDefault();
+		
+		$.post(
+			$(this).attr('action')+ '.json',
+			$(this).serialize()
+		)
+		.success(function(response){
+			$('#comments form').children('input').val('');
+			var comment = '<li><h3>' + response.title + '</h3><p>' + response.content + '</p>';
+			if(response.comment_id){
+				$('#reply').remove();
+				$('#'+response.comment_id).after(comment);
+			}
+			else
+				$('#comments ul').append(comment);
+		})
+		.error(function(response){ 
+			//Use rails built-in validation
+			var errors = $.parseJSON(response.responseText);
+			$.each(errors, function(key, value){
+				if($('#comment_' + key).parent().find('.error-message').length == 0){
+					$('#comment_' + key).after('<div class="error-message">' + value + '</div>');
+					$('#comment_' + key).parent().addClass('error-field');
+				}
+			});	
+		});
+		return false;
+	});
+	
+	$('#comments .reply').live('click', function(){
+		var reply_form = $('#comments form').clone().attr('id', 'reply');
+		$('#comment_comment_id', reply_form).val($(this).parent().attr('id'));
+		$(this).parent().after(reply_form);
+		return false;
+	});
+	
+	
+
+	//Remove error message
+	$('#comment form input').change(function(){
+		if($(this).val() != '')
+			$(this).parent().removeClass('error-field')
+			.find('.error-message').remove();
+
+	});
+});

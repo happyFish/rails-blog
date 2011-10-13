@@ -1,0 +1,76 @@
+<section id="article">
+  <p>
+    <b>User:</b>
+    <%= @post.user.email %>
+  </p>
+
+  <p>
+    <b>Title:</b>
+    <%= @post.title %>
+  </p>
+
+  <p>
+    <b>Content:</b>
+    <%= textilize @post.content %>
+  </p>
+
+  <div id="tags">
+    <%  @post.tags.sort!.each do |tag| %>
+    <%=   link_to(tag.title, '/tags/' + tag.id.to_s) %>
+    <%  end %>
+  </div>
+</section>
+
+<section id="attachments">  
+  <ul>
+  <% @post.attachments.each do |attachment| %>
+<%  case attachment.file_type
+      when /image/ %>
+        <%= image_tag attachment.public_url %>
+      <% when /video/%>
+        <li class="video">
+          <%= video_tag attachment.public_url, :controls=>true %>
+        </li>
+      <% when /audio/ %>
+        <li class="audio">
+          <%= audio_tag attachment.public_url, :controls=>true%>
+        </li>
+      <% else %>
+        <li class="file">
+          <a href="/<%=attachment.public_url%>">Download <%=attachment.file_name%> </a>
+        </li>
+    <% end %>
+    </li>
+  <% end %>
+  </ul>
+</section>
+
+
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
+
+<section id="comments">
+  <h1>Comments</h1> 
+  <h2>Leave a comment</h2>
+  <%= render :partial => "comments/form", :post=>@post %>
+
+  <ul>
+  <% @post.comments.each do |comment| 
+    next if comment.comment_id
+    #Think about using jquery template here %>
+    <li id="<%=comment.id%>">
+      <h3><%=comment.title%></h3>
+      <p><%=comment.content%></p>
+      <a href="#" class="reply">Reply</a>
+    </li>
+    <% comment.comments.each do |reply| %>
+      <li id="<%=comment.id%>" class="reply">
+        <h3><%=reply.title%></h3>
+        <p><%=reply.content%></p>
+        <a href="#" class="reply">Reply</a>
+      </li>
+    <% end %>
+  <% end %>
+  </ul>
+  
+</section>
