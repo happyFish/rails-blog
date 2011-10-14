@@ -9,5 +9,7 @@
     <%= label_tag :password %>  
     <%= password_field_tag :password %>  
   </div>  
+  
+  <%= link_to 'Forgotten password?', new_password_reset_path %>
   <div class="actions"><%= submit_tag "Log in" %></div>  
 <% end %>

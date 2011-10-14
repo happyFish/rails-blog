@@ -13,6 +13,11 @@
         <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
     <% end %>
   
+    <nav id="links">
+      <%=link_to 'Sign Up', new_user_path%> | <%=link_to 'Login', users_login_path %> <br/>
+      <%= link_to 'Posts', posts_path%>
+    </nav>
+  
     <%= yield %>
   <div>
 

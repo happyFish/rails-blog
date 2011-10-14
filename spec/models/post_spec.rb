@@ -5,7 +5,7 @@ describe Post do
   before do
     @post = Post.new({:user_id => 1, :title=>'Title', :content=>'This is the content' }) 
   end
-    
+  
   it "Should fail if title, user, or content are empty, and succeed if not" do
     @post.should be_valid
     @post.user_id = nil
@@ -27,7 +27,7 @@ describe Post do
   end
   
   it "should be associated with a bunch of tags" do
-    @post.should have_many(:tags)
+    @post.should have_and_belong_to_many(:tags)
   end
   
   it "should upload multiple files as attachments" do
@@ -35,6 +35,12 @@ describe Post do
     @post.save
     @post.attachments.first().file_name.should == 'Something.png'
     @post.attachments.last().file_name.should == 'Something3.txt'
+  end
+  
+  it "should have a bunch of comments" do
+    add_comments
+    @post.should have_many(:comments)
+    @post.comments.should have(3).records
   end
   
   def add_tags
@@ -48,5 +54,11 @@ describe Post do
     @post.attachments << Attachment.new({:file_name=>'Something2.zip', :file_type=>'application/zip', :file_size=>25, :file_path=>'public/attachments/Something2.zip'})
     @post.attachments << Attachment.new({:file_name=>'Something3.txt', :file_type=>'application/text', :file_size=>25, :file_path=>'public/attachments/Something3.txt'})
   end
+  
+  def add_comments
+    @post.comments << Comment.new({:title=>'Comment1', :name=>'My Name', :email=>'email@mail.com', :content=>'This is my comment', :post_id=>@post.id})
+    @post.comments << Comment.new({:title=>'Comment2', :name=>'Another Name', :email=>'email2@email.com', :content=>'This is my comment2', :post_id=>@post.id})
+    @post.comments << Comment.new({:title=>'Comment on a comment', :name=>'Replier Name', :email=>'email3@email.com', :content=>'This is my comment3. It is a response to comment #2', :comment_id=>2, :post_id=>@post.id})
+  end  
     
 end

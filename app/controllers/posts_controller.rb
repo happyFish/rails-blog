@@ -94,11 +94,4 @@ class PostsController < ApplicationController
     end
   end
   
-  
-  def authenticate
-    unless current_user
-      redirect_to '/users/login', notice: 'You must log in to do that'
-    end
-  end
-  
 end

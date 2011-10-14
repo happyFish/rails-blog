@@ -1,6 +1,17 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   
+  def authenticate
+    unless current_user
+      session[:return_to] = request.url
+      redirect_to '/users/login', notice: 'You must log in to do that'
+    end
+  end
+  
+  def home
+    
+  end
+  
   private  
 
   def current_user  
@@ -8,5 +19,6 @@ class ApplicationController < ActionController::Base
   end  
 
   helper_method :current_user
+  
 
 end

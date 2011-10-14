@@ -32,9 +32,16 @@ group :test do
   gem 'turn', :require => false
 end
 
+
+#Git rid of that stupid warning message
+gem 'rack', '1.3.3'
+
 group :development, :test do
   gem 'rspec-rails'
   gem 'shoulda-matchers'
+  gem "factory_girl_rails"
+  gem "capybara"
+  gem "guard-rspec"
 end
 
 #Markdown
